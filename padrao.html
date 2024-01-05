@@ -1,0 +1,80 @@
+<!DOCTYPE HTML><?php header('Content-Type: text/html; charset=UTF-8; '); ?>
+<html>
+<head>
+<meta charset="utf-8">
+<title>FORMULARIO PADRÃO</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<!-- CSS ESTILO FORMULARIO -->
+ <link href="css/SpryValidationTextField.css" rel="stylesheet" type="text/css" />
+ <link href="css/SpryValidationTextarea.css" rel="stylesheet" type="text/css" />
+ <link href="css/SpryValidationSelect.css" rel="stylesheet" type="text/css" />
+ <link rel="stylesheet" href="css/estilo.css" type="text/css" />
+
+</head>
+<body>
+
+<h3>Entre em contato conosco</h3>
+<div class="formulario"> 
+  <form  method="POST" action="enviaemail.php"> <!--  chama o envia.php -->  
+
+  <div class="formulario-texto">Nome</div>
+  <div class="formulario-campo">
+  <span id="sprytextfield1">
+  <input type="text" name="nomeremetente" class="textfield-nome"/>
+  <br /><span class="textfieldRequiredMsg">Digite seu nome</span></span></div>
+  
+  <div class="formulario-texto">E-mail</div>
+  <div class="formulario-campo"><span id="sprytextfield2">
+  <input type="text" name="emailremetente" class="textfield-nome"/>
+  <br /><span class="textfieldRequiredMsg">Digite seu e-mail</span>
+  <span class="textfieldInvalidFormatMsg">Formato de e-mail inválido</span></span></div> 
+   
+  <div class="formulario-texto">Telefone</div>
+  <div class="formulario-campo">
+  
+  <span id="sprytextfield3">
+  <input type="text" name="ddd" class="textfield-ddd" />
+  <span class="textfieldRequiredMsg">Digite seu DDD</span>
+  <span class="textfieldInvalidFormatMsg">Digite os 2 números do seu DDD</span>
+  <span class="textfieldMinCharsMsg">Digite os 2 números do seu DDD</span>
+  <span class="textfieldMaxCharsMsg">Digite os 2 números do seu DDD</span></span>  
+  <span id="sprytextfield4">
+  <input type="text" name="telefone" class="textfield-telefone" /> <br />
+  <span class="textfieldRequiredMsg">Digite seu telefone</span>
+  <span class="textfieldInvalidFormatMsg">Formato inválido, digite seu telefone como no exemplo: 78872332</span></span></div>
+   
+  <div class="formulario-texto">Assunto</div>
+  <div class="formulario-campo"><span id="sprytextfield5">
+  <input type="text" name="assunto" class="textfield-nome"/>
+  <br /><span class="textfieldRequiredMsg">Digite o assunto</span></span></div>
+  <div  style="float:left; width:100%;"> </div>
+  <div class="formulario-texto">Mensagem</div>
+  <div class="formulario-campo"><span id="sprytextarea1">
+  <textarea name="mensagem" class="textfield-campo"></textarea>
+  <br /><span class="textareaRequiredMsg">Digite sua mensagem</span></span></div>
+   
+  <div>
+ <input type="image" src="images/enviar.png" name="enviar" type="submit" value="Enviar" />  
+	   </div> </form> 
+  
+ <!-- Chama validação do formulário -->
+ 
+<script defer src="js/SpryValidationTextField.js" language="javascript" ></script>
+<script defer src="js/SpryValidationTextarea.js" language="javascript" ></script>
+<script defer src="js/SpryValidationSelect.js" language="javascript" ></script> 
+
+<script>
+
+	var sprytextfield1 = new Spry.Widget.ValidationTextField("sprytextfield1");
+	var sprytextfield2 = new Spry.Widget.ValidationTextField("sprytextfield2", "email");
+	var sprytextfield3 = new Spry.Widget.ValidationTextField("sprytextfield3", "integer", {minChars:2, maxChars:2});
+	var sprytextfield4 = new Spry.Widget.ValidationTextField("sprytextfield4");	
+	var sprytextfield5 = new Spry.Widget.ValidationTextField("sprytextfield5");
+	var sprytextarea1 = new Spry.Widget.ValidationTextarea("sprytextarea1");
+
+</script>
+ </div>
+
+</body>
+</html>

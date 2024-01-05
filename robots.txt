@@ -1,0 +1,6 @@
+User-agent: *
+
+sitemap: https://www.projetometalico.com.br/sitemap.xml
+sitemap: https://www.projetometalico.com.br/sitemap-pr.xml
+sitemap: https://www.projetometalico.com.br/sitemap-rs.xml
+sitemap: https://www.projetometalico.com.br/sitemap-sc.xml
