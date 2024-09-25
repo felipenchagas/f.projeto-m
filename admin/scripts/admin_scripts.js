@@ -1,4 +1,6 @@
-// scripts/admin_scripts2.js
+// admin/scripts/admin_scripts2.js
+
+let authToken = null;
 
 // Função de login
 document.getElementById('login-btn').addEventListener('click', () => {
@@ -20,12 +22,11 @@ document.getElementById('login-btn').addEventListener('click', () => {
     .then(response => response.json())
     .then(data => {
         if (data.sucesso) {
-            // Armazenar o token no localStorage
-            localStorage.setItem('authToken', data.token);
+            authToken = data.token; // Salva o token recebido
             document.getElementById('admin-section').style.display = 'block';
             document.getElementById('login-btn').style.display = 'none';
             document.getElementById('logout-btn').style.display = 'inline-block';
-            carregarContatos();
+            carregarContatos(); // Função para carregar os contatos usando o token
         } else {
             alert(data.mensagem);
         }
@@ -38,43 +39,19 @@ document.getElementById('login-btn').addEventListener('click', () => {
 
 // Função de logout
 document.getElementById('logout-btn').addEventListener('click', () => {
-    fetch('https://empresarialweb.com.br/backend/projetom/logout.php', {
-        method: 'POST',
-        headers: {
-            'Authorization': localStorage.getItem('authToken')
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.sucesso) {
-            localStorage.removeItem('authToken');
-            document.getElementById('admin-section').style.display = 'none';
-            document.getElementById('login-btn').style.display = 'inline-block';
-            document.getElementById('logout-btn').style.display = 'none';
-            document.getElementById('contactsBody').innerHTML = '';
-        } else {
-            alert(data.mensagem);
-        }
-    })
-    .catch(error => {
-        console.error('Erro:', error);
-        alert('Erro ao tentar logout.');
-    });
+    authToken = null; // Limpa o token localmente
+    document.getElementById('admin-section').style.display = 'none';
+    document.getElementById('login-btn').style.display = 'inline-block';
+    document.getElementById('logout-btn').style.display = 'none';
+    document.getElementById('contactsBody').innerHTML = ''; // Limpa a lista de contatos
 });
 
-// Carregar contatos
+// Função para carregar contatos
 function carregarContatos() {
-    const token = localStorage.getItem('authToken');
-    if (!token) {
-        alert('Autenticação inválida. Faça login novamente.');
-        window.location.href = '/admin/contatos.html';
-        return;
-    }
-
     fetch('https://empresarialweb.com.br/backend/projetom/api.php', {
         method: 'GET',
         headers: {
-            'Authorization': token
+            'Authorization': authToken // Inclui o token no cabeçalho
         }
     })
     .then(response => response.json())
@@ -85,7 +62,6 @@ function carregarContatos() {
             tbody.innerHTML = '';
             contatos.forEach(contato => {
                 const tr = document.createElement('tr');
-
                 tr.innerHTML = `
                     <td>${contato.nome}</td>
                     <td>${contato.email}</td>
@@ -102,10 +78,7 @@ function carregarContatos() {
                 tbody.appendChild(tr);
             });
         } else {
-            alert(data.mensagem);
-            if (data.mensagem === 'Autenticação inválida.') {
-                window.location.href = '/admin/contatos.html';
-            }
+            alert('Autenticação inválida.');
         }
     })
     .catch(error => {
@@ -114,7 +87,7 @@ function carregarContatos() {
     });
 }
 
-// Adicionar contato
+// Função para adicionar contato
 document.getElementById('add-contact-form').addEventListener('submit', (e) => {
     e.preventDefault();
     const nome = document.getElementById('nome').value;
@@ -124,17 +97,11 @@ document.getElementById('add-contact-form').addEventListener('submit', (e) => {
     const estado = document.getElementById('estado').value;
     const descricao = document.getElementById('descricao').value;
 
-    const token = localStorage.getItem('authToken');
-    if (!token) {
-        alert('Autenticação inválida. Faça login novamente.');
-        return;
-    }
-
     fetch('https://empresarialweb.com.br/backend/projetom/api.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': token
+            'Authorization': authToken // Inclui o token no cabeçalho
         },
         body: JSON.stringify({ nome, email, telefone, cidade, estado, descricao })
     })
@@ -155,19 +122,13 @@ document.getElementById('add-contact-form').addEventListener('submit', (e) => {
     });
 });
 
-// Deletar contato
+// Função para deletar contato
 function deletarContato(id) {
     if (confirm('Tem certeza que deseja deletar este contato?')) {
-        const token = localStorage.getItem('authToken');
-        if (!token) {
-            alert('Autenticação inválida. Faça login novamente.');
-            return;
-        }
-
         fetch('https://empresarialweb.com.br/backend/projetom/api.php', {
             method: 'DELETE',
             headers: {
-                'Authorization': token,
+                'Authorization': authToken,
                 'Content-Type': 'application/x-www-form-urlencoded'
             },
             body: `id=${id}`
@@ -188,18 +149,12 @@ function deletarContato(id) {
     }
 }
 
-// Editar contato
+// Função para editar contato
 function editarContato(id) {
-    const token = localStorage.getItem('authToken');
-    if (!token) {
-        alert('Autenticação inválida. Faça login novamente.');
-        return;
-    }
-
     fetch(`https://empresarialweb.com.br/backend/projetom/api.php?id=${id}`, {
         method: 'GET',
         headers: {
-            'Authorization': token
+            'Authorization': authToken // Inclui o token no cabeçalho
         }
     })
     .then(response => response.json())
@@ -224,7 +179,7 @@ function editarContato(id) {
     });
 }
 
-// Salvar edição de contato
+// Função para salvar edição de contato
 document.getElementById('edit-contact-form').addEventListener('submit', (e) => {
     e.preventDefault();
     const id = document.getElementById('edit-id').value;
@@ -235,17 +190,11 @@ document.getElementById('edit-contact-form').addEventListener('submit', (e) => {
     const estado = document.getElementById('edit-estado').value;
     const descricao = document.getElementById('edit-descricao').value;
 
-    const token = localStorage.getItem('authToken');
-    if (!token) {
-        alert('Autenticação inválida. Faça login novamente.');
-        return;
-    }
-
     fetch('https://empresarialweb.com.br/backend/projetom/api.php', {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': token
+            'Authorization': authToken // Inclui o token no cabeçalho
         },
         body: JSON.stringify({ id, nome, email, telefone, cidade, estado, descricao })
     })
@@ -282,7 +231,7 @@ document.querySelectorAll('.close-btn').forEach(btn => {
     });
 });
 
-// Ordenar tabela
+// Função para ordenar a tabela
 let sortOrder = {};
 function sortTable(n) {
     let table = document.getElementById("contactsTable");
@@ -293,13 +242,11 @@ function sortTable(n) {
         let cell1 = row1.cells[n].innerText.toLowerCase();
         let cell2 = row2.cells[n].innerText.toLowerCase();
 
-        // Verificação se a coluna é Data
-        if (n === 6) {
-            // Converter para timestamp para comparação
+        if (n === 6) { // Se for a coluna de Data
             let partes1 = cell1.split('/');
             let partes2 = cell2.split('/');
-            cell1 = new Date(partes1[2], partes1[1]-1, partes1[0], partes1[3].split(':')[0], partes1[3].split(':')[1]).getTime();
-            cell2 = new Date(partes2[2], partes2[1]-1, partes2[0], partes2[3].split(':')[0], partes2[3].split(':')[1]).getTime();
+            cell1 = new Date(partes1[2], partes1[1] - 1, partes1[0]).getTime();
+            cell2 = new Date(partes2[2], partes2[1] - 1, partes2[0]).getTime();
         }
 
         if (cell1 < cell2) return isAscending ? -1 : 1;
@@ -311,7 +258,7 @@ function sortTable(n) {
     sortOrder[n] = isAscending;
 }
 
-// Pesquisar na tabela
+// Função para pesquisar na tabela
 function searchTable() {
     let input = document.getElementById("searchInput").value.toLowerCase();
     let rows = document.querySelectorAll("table tbody tr");
@@ -321,14 +268,3 @@ function searchTable() {
         row.style.display = rowText.includes(input) ? "" : "none";
     });
 }
-
-// Verificar autenticação no carregamento da página
-window.onload = () => {
-    const token = localStorage.getItem('authToken');
-    if (token) {
-        document.getElementById('admin-section').style.display = 'block';
-        document.getElementById('login-btn').style.display = 'none';
-        document.getElementById('logout-btn').style.display = 'inline-block';
-        carregarContatos();
-    }
-};
