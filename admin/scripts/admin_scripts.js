@@ -12,7 +12,7 @@ document.getElementById('login-btn').addEventListener('click', () => {
         return;
     }
 
-    fetch('https://projetometalico.com.br/api/login.php', { // Substitua pelo seu endpoint correto
+    fetch('https://empresarialweb.com.br/backend/projetom/login.php', { // Substitua pelo seu endpoint correto
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -39,7 +39,7 @@ document.getElementById('login-btn').addEventListener('click', () => {
 
 // Função de logout
 document.getElementById('logout-btn').addEventListener('click', () => {
-    fetch('https://projetometalico.com.br/api/logout.php', { // Substitua pelo seu endpoint correto
+    fetch('https://empresarialweb.com.br/backend/projetom/logout.php', { // Substitua pelo seu endpoint correto
         method: 'POST',
         headers: {
             'Authorization': authToken
@@ -65,7 +65,7 @@ document.getElementById('logout-btn').addEventListener('click', () => {
 
 // Carregar contatos
 function carregarContatos() {
-    fetch('https://projetometalico.com.br/api/api.php', { // Substitua pelo seu endpoint correto
+    fetch('https://empresarialweb.com.br/backend/projetom/api.php', { // Substitua pelo seu endpoint correto
         method: 'GET',
         headers: {
             'Authorization': authToken
@@ -115,7 +115,7 @@ document.getElementById('add-contact-form').addEventListener('submit', (e) => {
     const estado = document.getElementById('estado').value;
     const descricao = document.getElementById('descricao').value;
 
-    fetch('https://projetometalico.com.br/api/api.php', { // Substitua pelo seu endpoint correto
+    fetch('https://empresarialweb.com.br/backend/projetom/api.php', { // Substitua pelo seu endpoint correto
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -143,7 +143,7 @@ document.getElementById('add-contact-form').addEventListener('submit', (e) => {
 // Deletar contato
 function deletarContato(id) {
     if (confirm('Tem certeza que deseja deletar este contato?')) {
-        fetch('https://projetometalico.com.br/api/api.php', { // Substitua pelo seu endpoint correto
+        fetch('https://empresarialweb.com.br/backend/projetom/api.php', { // Substitua pelo seu endpoint correto
             method: 'DELETE',
             headers: {
                 'Authorization': authToken,
@@ -170,7 +170,7 @@ function deletarContato(id) {
 // Editar contato
 function editarContato(id) {
     // Obter dados do contato
-    fetch(`https://projetometalico.com.br/api/api.php?id=${id}`, { // Substitua pelo seu endpoint correto
+    fetch(`https://empresarialweb.com.br/backend/projetom/api.php?id=${id}`, { // Substitua pelo seu endpoint correto
         method: 'GET',
         headers: {
             'Authorization': authToken
@@ -209,7 +209,7 @@ document.getElementById('edit-contact-form').addEventListener('submit', (e) => {
     const estado = document.getElementById('edit-estado').value;
     const descricao = document.getElementById('edit-descricao').value;
 
-    fetch('https://projetometalico.com.br/api/api.php', { // Substitua pelo seu endpoint correto
+    fetch('https://empresarialweb.com.br/backend/projetom/api.php', { // Substitua pelo seu endpoint correto
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
