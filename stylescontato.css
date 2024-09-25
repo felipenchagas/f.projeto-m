@@ -1,4 +1,5 @@
 /* Estilos Gerais */
+/* Estilos Gerais */
 * {
   margin: 0;
   padding: 0;
@@ -20,7 +21,7 @@ body {
 }
 
 .floating-button button {
-  background-color: #821212; /* Azul mais escuro */
+  background-color: #c96c08; /* Azul mais escuro */
   color: white;
   padding: 15px 25px;
   border: none;
@@ -116,7 +117,7 @@ body {
 
 .modal-content .input-group input:focus,
 .modal-content .input-group textarea:focus {
-  border-color: #821212; /* Azul no foco */
+  border-color: #c96c08; /* Azul no foco */
   box-shadow: 0 0 8px rgba(31, 111, 235, 0.5); /* Sombra azul no foco */
   outline: none;
 }
@@ -142,7 +143,7 @@ body {
 
 /* Botão de envio */
 button[type="submit"] {
-  background-color: #821212; /* Azul escuro */
+  background-color: #c96c08; /* Azul escuro */
   color: white;
   padding: 15px;
   width: 100%;
