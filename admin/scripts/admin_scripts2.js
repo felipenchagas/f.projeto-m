@@ -22,7 +22,7 @@ document.getElementById('login-btn').addEventListener('click', () => {
     .then(response => response.json())
     .then(data => {
         if (data.sucesso) {
-            authToken = data.token; // Salva o token recebido
+            authToken = data.token.split(' ')[1]; // Salva apenas o valor do token (sem "Bearer ")
             document.getElementById('admin-section').style.display = 'block';
             document.getElementById('login-btn').style.display = 'none';
             document.getElementById('logout-btn').style.display = 'inline-block';
@@ -51,7 +51,7 @@ function carregarContatos() {
     fetch('https://empresarialweb.com.br/backend/projetom/api.php', {
         method: 'GET',
         headers: {
-            'Authorization': authToken // Inclui o token no cabeçalho
+            'Authorization': `Bearer ${authToken}` // Inclui o token no cabeçalho
         }
     })
     .then(response => response.json())
@@ -84,187 +84,5 @@ function carregarContatos() {
     .catch(error => {
         console.error('Erro:', error);
         alert('Erro ao carregar contatos.');
-    });
-}
-
-// Função para adicionar contato
-document.getElementById('add-contact-form').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const nome = document.getElementById('nome').value;
-    const email = document.getElementById('email').value;
-    const telefone = document.getElementById('telefone').value;
-    const cidade = document.getElementById('cidade').value;
-    const estado = document.getElementById('estado').value;
-    const descricao = document.getElementById('descricao').value;
-
-    fetch('https://empresarialweb.com.br/backend/projetom/api.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': authToken // Inclui o token no cabeçalho
-        },
-        body: JSON.stringify({ nome, email, telefone, cidade, estado, descricao })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.sucesso) {
-            alert(data.mensagem);
-            document.getElementById('add-contact-form').reset();
-            carregarContatos();
-            fecharModal('add-contact-modal');
-        } else {
-            alert(data.mensagem);
-        }
-    })
-    .catch(error => {
-        console.error('Erro:', error);
-        alert('Erro ao adicionar contato.');
-    });
-});
-
-// Função para deletar contato
-function deletarContato(id) {
-    if (confirm('Tem certeza que deseja deletar este contato?')) {
-        fetch('https://empresarialweb.com.br/backend/projetom/api.php', {
-            method: 'DELETE',
-            headers: {
-                'Authorization': authToken,
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: `id=${id}`
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.sucesso) {
-                alert(data.mensagem);
-                carregarContatos();
-            } else {
-                alert(data.mensagem);
-            }
-        })
-        .catch(error => {
-            console.error('Erro:', error);
-            alert('Erro ao deletar contato.');
-        });
-    }
-}
-
-// Função para editar contato
-function editarContato(id) {
-    fetch(`https://empresarialweb.com.br/backend/projetom/api.php?id=${id}`, {
-        method: 'GET',
-        headers: {
-            'Authorization': authToken // Inclui o token no cabeçalho
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.sucesso && data.dados.length > 0) {
-            const contato = data.dados[0];
-            document.getElementById('edit-id').value = contato.id;
-            document.getElementById('edit-nome').value = contato.nome;
-            document.getElementById('edit-email').value = contato.email;
-            document.getElementById('edit-telefone').value = contato.telefone;
-            document.getElementById('edit-cidade').value = contato.cidade;
-            document.getElementById('edit-estado').value = contato.estado;
-            document.getElementById('edit-descricao').value = contato.descricao;
-            abrirModal('edit-contact-modal');
-        } else {
-            alert('Contato não encontrado.');
-        }
-    })
-    .catch(error => {
-        console.error('Erro:', error);
-        alert('Erro ao buscar contato.');
-    });
-}
-
-// Função para salvar edição de contato
-document.getElementById('edit-contact-form').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const id = document.getElementById('edit-id').value;
-    const nome = document.getElementById('edit-nome').value;
-    const email = document.getElementById('edit-email').value;
-    const telefone = document.getElementById('edit-telefone').value;
-    const cidade = document.getElementById('edit-cidade').value;
-    const estado = document.getElementById('edit-estado').value;
-    const descricao = document.getElementById('edit-descricao').value;
-
-    fetch('https://empresarialweb.com.br/backend/projetom/api.php', {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': authToken // Inclui o token no cabeçalho
-        },
-        body: JSON.stringify({ id, nome, email, telefone, cidade, estado, descricao })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.sucesso) {
-            alert(data.mensagem);
-            document.getElementById('edit-contact-form').reset();
-            carregarContatos();
-            fecharModal('edit-contact-modal');
-        } else {
-            alert(data.mensagem);
-        }
-    })
-    .catch(error => {
-        console.error('Erro:', error);
-        alert('Erro ao editar contato.');
-    });
-});
-
-// Funções para abrir e fechar modais
-function abrirModal(id) {
-    document.getElementById(id).style.display = 'block';
-}
-
-function fecharModal(id) {
-    document.getElementById(id).style.display = 'none';
-}
-
-// Fechar modais ao clicar no 'x'
-document.querySelectorAll('.close-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-        fecharModal(btn.parentElement.parentElement.id);
-    });
-});
-
-// Função para ordenar a tabela
-let sortOrder = {};
-function sortTable(n) {
-    let table = document.getElementById("contactsTable");
-    let rows = Array.from(table.rows).slice(1);
-    let isAscending = !sortOrder[n];
-
-    rows.sort((row1, row2) => {
-        let cell1 = row1.cells[n].innerText.toLowerCase();
-        let cell2 = row2.cells[n].innerText.toLowerCase();
-
-        if (n === 6) { // Se for a coluna de Data
-            let partes1 = cell1.split('/');
-            let partes2 = cell2.split('/');
-            cell1 = new Date(partes1[2], partes1[1] - 1, partes1[0]).getTime();
-            cell2 = new Date(partes2[2], partes2[1] - 1, partes2[0]).getTime();
-        }
-
-        if (cell1 < cell2) return isAscending ? -1 : 1;
-        if (cell1 > cell2) return isAscending ? 1 : -1;
-        return 0;
-    });
-
-    rows.forEach(row => table.appendChild(row));
-    sortOrder[n] = isAscending;
-}
-
-// Função para pesquisar na tabela
-function searchTable() {
-    let input = document.getElementById("searchInput").value.toLowerCase();
-    let rows = document.querySelectorAll("table tbody tr");
-
-    rows.forEach(row => {
-        let rowText = row.innerText.toLowerCase();
-        row.style.display = rowText.includes(input) ? "" : "none";
     });
 }
