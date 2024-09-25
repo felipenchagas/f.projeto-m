@@ -12,7 +12,7 @@ document.getElementById('login-btn').addEventListener('click', () => {
         return;
     }
 
-    fetch('https://empresarialweb.com.br/backend/projetom/login.php', { // Substitua pelo seu endpoint correto
+    fetch('https://empresarialweb.com.br/backend/projetom/login.php', { //x Substitua pelo seu endpoint correto
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
